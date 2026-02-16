@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Vocabulary</title>
+<!-- Favicon عادي -->
+<link rel="icon" href="icon-192.png" type="image/png">
+
+<!-- Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Theme color للمتصفح -->
+<meta name="theme-color" content="#1d4ed8">
+
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<div class="max-w-md mx-auto min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <div class="bg-blue-600 text-white p-4 rounded-b-3xl shadow">
+    <h1 class="text-xl font-bold text-center">English Vocabulary</h1>
+    <button onclick="resetProgress()"
+      class="mt-3 w-full bg-white text-blue-600 font-semibold py-2 rounded-xl">
+      Reset All Progress
+    </button>
+  </div>
+
+  <div class="p-4 flex-1">
+
+    <!-- المجالات -->
+    <div id="fieldsContainer" class="grid grid-cols-2 gap-3 mb-6"></div>
+
+    <!-- الأقسام -->
+    <div id="sectionsContainer" class="flex flex-wrap gap-2 mb-6 hidden"></div>
+
+    <!-- الكلمات -->
+    <div id="wordsContainer"></div>
+
+  </div>
+</div>
+
+<script>
+const data = [
+  {
+    field: "Daily Life",
+    sections: [
+      {
+  title: "Home",
+  words: [
+    { id: "home-kitchen", word: "Kitchen", meaning: "مطبخ", sentence: "I am cooking in the kitchen." },
+    { id: "home-bedroom", word: "Bedroom", meaning: "غرفة النوم", sentence: "She is sleeping in the bedroom." },
+    { id: "home-livingroom", word: "Living Room", meaning: "غرفة المعيشة", sentence: "We are watching TV in the living room." },
+    { id: "home-bathroom", word: "Bathroom", meaning: "حمام", sentence: "He is taking a shower in the bathroom." },
+    { id: "home-diningroom", word: "Dining Room", meaning: "غرفة الطعام", sentence: "We eat dinner in the dining room." },
+    { id: "home-garage", word: "Garage", meaning: "كراج", sentence: "The car is parked in the garage." },
+    { id: "home-garden", word: "Garden", meaning: "حديقة", sentence: "I am watering the plants in the garden." },
+    { id: "home-balcony", word: "Balcony", meaning: "شرفة", sentence: "She is sitting on the balcony." },
+    { id: "home-door", word: "Door", meaning: "باب", sentence: "Please close the door." },
+    { id: "home-window", word: "Window", meaning: "نافذة", sentence: "Open the window for fresh air." },
+    { id: "home-sofa", word: "Sofa", meaning: "أريكة", sentence: "We are sitting on the sofa." },
+    { id: "home-chair", word: "Chair", meaning: "كرسي", sentence: "I am sitting on the chair." },
+    { id: "home-table", word: "Table", meaning: "طاولة", sentence: "The books are on the table." },
+    { id: "home-bed", word: "Bed", meaning: "سرير", sentence: "I am going to sleep on the bed." },
+    { id: "home-lamp", word: "Lamp", meaning: "مصباح", sentence: "Turn on the lamp, it's dark." },
+    { id: "home-carpet", word: "Carpet", meaning: "سجادة", sentence: "The carpet is in the living room." },
+    { id: "home-tv", word: "TV", meaning: "تلفاز", sentence: "They are watching TV together." },
+    { id: "home-fridge", word: "Fridge", meaning: "ثلاجة", sentence: "The milk is in the fridge." },
+    { id: "home-oven", word: "Oven", meaning: "فرن", sentence: "Bake the cake in the oven." },
+    { id: "home-mirror", word: "Mirror", meaning: "مرآة", sentence: "She is looking at herself in the mirror." }
+  ]
+},
+      {
+  title: "Shopping",
+  words: [
+    { id: "shop-price", word: "Price", meaning: "سعر", sentence: "The price is very high." },
+    { id: "shop-market", word: "Market", meaning: "سوق", sentence: "We go to the market every Friday." },
+    { id: "shop-money", word: "Money", meaning: "مال", sentence: "I need some money to buy groceries." },
+    { id: "shop-bill", word: "Bill", meaning: "فاتورة", sentence: "Can I have the bill, please?" },
+    { id: "shop-sale", word: "Sale", meaning: "تخفيض", sentence: "The store has a big sale today." },
+    { id: "shop-cart", word: "Cart", meaning: "عربة التسوق", sentence: "I put the items in the cart." },
+    { id: "shop-queue", word: "Queue", meaning: "صف", sentence: "There is a long queue at the cashier." },
+    { id: "shop-cashier", word: "Cashier", meaning: "أمين الصندوق", sentence: "The cashier scanned all the items." },
+    { id: "shop-bag", word: "Bag", meaning: "حقيبة", sentence: "I need a bag for these groceries." },
+    { id: "shop-discount", word: "Discount", meaning: "خصم", sentence: "I got a discount on my shoes." },
+    { id: "shop-creditcard", word: "Credit Card", meaning: "بطاقة ائتمان", sentence: "I paid with my credit card." },
+    { id: "shop-coupon", word: "Coupon", meaning: "قسيمة", sentence: "I used a coupon for 10% off." },
+    { id: "shop-item", word: "Item", meaning: "غرض/سلعة", sentence: "I want to buy this item." },
+    { id: "shop-size", word: "Size", meaning: "مقاس", sentence: "What size do you wear?" },
+    { id: "shop-color", word: "Color", meaning: "لون", sentence: "I like this color of shirt." },
+    { id: "shop-brand", word: "Brand", meaning: "ماركة", sentence: "This is a famous brand." },
+    { id: "shop-store", word: "Store", meaning: "متجر", sentence: "I went to the store yesterday." },
+    { id: "shop-queue", word: "Line", meaning: "صف", sentence: "There is a line at the counter." },
+    { id: "shop-refund", word: "Refund", meaning: "استرجاع", sentence: "I want a refund for this product." },
+    { id: "shop-receipt", word: "Receipt", meaning: "إيصال", sentence: "Keep the receipt in case of return." }
+  ]
+},
+      {
+  title: "Eating",
+  words: [
+    { id: "eat-breakfast", word: "Breakfast", meaning: "فطور", sentence: "I eat breakfast at 7 AM every day." },
+    { id: "eat-lunch", word: "Lunch", meaning: "غداء", sentence: "We have lunch together at noon." },
+    { id: "eat-dinner", word: "Dinner", meaning: "عشاء", sentence: "Dinner is my favorite meal." },
+    { id: "eat-snack", word: "Snack", meaning: "وجبة خفيفة", sentence: "I like to eat a snack in the afternoon." },
+    { id: "eat-fruit", word: "Fruit", meaning: "فاكهة", sentence: "I eat an apple every day." },
+    { id: "eat-vegetable", word: "Vegetable", meaning: "خضار", sentence: "I like fresh vegetables in my salad." },
+    { id: "eat-meat", word: "Meat", meaning: "لحم", sentence: "He prefers to eat meat for dinner." },
+    { id: "eat-fish", word: "Fish", meaning: "سمك", sentence: "We eat fish on Fridays." },
+    { id: "eat-rice", word: "Rice", meaning: "أرز", sentence: "I cooked rice for lunch." },
+    { id: "eat-bread", word: "Bread", meaning: "خبز", sentence: "She buys fresh bread from the bakery." },
+    { id: "eat-soup", word: "Soup", meaning: "حساء", sentence: "I like to drink hot soup in winter." },
+    { id: "eat-pasta", word: "Pasta", meaning: "باستا", sentence: "We made pasta for dinner." },
+    { id: "eat-salad", word: "Salad", meaning: "سلطة", sentence: "I ordered a fresh salad." },
+    { id: "eat-cheese", word: "Cheese", meaning: "جبن", sentence: "I like cheese on my sandwich." },
+    { id: "eat-egg", word: "Egg", meaning: "بيضة", sentence: "I boiled an egg for breakfast." },
+    { id: "eat-milk", word: "Milk", meaning: "حليب", sentence: "I drink milk every morning." },
+    { id: "eat-coffee", word: "Coffee", meaning: "قهوة", sentence: "He drinks coffee every day." },
+    { id: "eat-tea", word: "Tea", meaning: "شاي", sentence: "I prefer tea in the evening." },
+    { id: "eat-sugar", word: "Sugar", meaning: "سكر", sentence: "Add a little sugar to your tea." },
+    { id: "eat-salt", word: "Salt", meaning: "ملح", sentence: "Please put some salt on the food." }
+  ]
+},
+      {
+  title: "Hygiene",
+  words: [
+    { id: "hygiene-toothbrush", word: "Toothbrush", meaning: "فرشاة أسنان", sentence: "I brush my teeth with a toothbrush every morning." },
+    { id: "hygiene-toothpaste", word: "Toothpaste", meaning: "معجون أسنان", sentence: "Use toothpaste when you brush your teeth." },
+    { id: "hygiene-soap", word: "Soap", meaning: "صابون", sentence: "I wash my hands with soap and water." },
+    { id: "hygiene-shampoo", word: "Shampoo", meaning: "شامبو", sentence: "I use shampoo to wash my hair." },
+    { id: "hygiene-conditioner", word: "Conditioner", meaning: "بلسم شعر", sentence: "Apply conditioner after shampooing." },
+    { id: "hygiene-towel", word: "Towel", meaning: "منشفة", sentence: "I dry my hands with a towel." },
+    { id: "hygiene-soapdish", word: "Soap Dish", meaning: "صحن صابون", sentence: "The soap dish is on the sink." },
+    { id: "hygiene-toilet", word: "Toilet", meaning: "مرحاض", sentence: "The toilet is clean." },
+    { id: "hygiene-toiletpaper", word: "Toilet Paper", meaning: "ورق حمام", sentence: "We need more toilet paper." },
+    { id: "hygiene-bath", word: "Bath", meaning: "حمام", sentence: "I take a bath every evening." },
+    { id: "hygiene-shower", word: "Shower", meaning: "دش", sentence: "I like taking a shower in the morning." },
+    { id: "hygiene-deodorant", word: "Deodorant", meaning: "مزيل عرق", sentence: "I use deodorant daily." },
+    { id: "hygiene-nailclippers", word: "Nail Clippers", meaning: "مقص أظافر", sentence: "I cut my nails with nail clippers." },
+    { id: "hygiene-comb", word: "Comb", meaning: "مشط", sentence: "I comb my hair every morning." },
+    { id: "hygiene-hairbrush", word: "Hairbrush", meaning: "فرشاة شعر", sentence: "She brushes her hair with a hairbrush." },
+    { id: "hygiene-handwash", word: "Hand Wash", meaning: "غسل اليدين", sentence: "Always hand wash before eating." },
+    { id: "hygiene-floss", word: "Floss", meaning: "خيط أسنان", sentence: "I use floss to clean between my teeth." },
+    { id: "hygiene-mouthwash", word: "Mouthwash", meaning: "غسول فم", sentence: "I rinse with mouthwash after brushing." },
+    { id: "hygiene-tissue", word: "Tissue", meaning: "مناديل", sentence: "I use a tissue to wipe my nose." },
+    { id: "hygiene-handcream", word: "Hand Cream", meaning: "كريم يد", sentence: "I apply hand cream to keep my hands soft." }
+  ]
+},
+     {
+  title: "Transport",
+  words: [
+    { id: "transport-car", word: "Car", meaning: "سيارة", sentence: "I drive my car to work every day." },
+    { id: "transport-bus", word: "Bus", meaning: "حافلة", sentence: "I take the bus to school." },
+    { id: "transport-train", word: "Train", meaning: "قطار", sentence: "The train arrives at 8 AM." },
+    { id: "transport-plane", word: "Plane", meaning: "طائرة", sentence: "We are flying on a plane to Paris." },
+    { id: "transport-bicycle", word: "Bicycle", meaning: "دراجة هوائية", sentence: "I ride my bicycle every morning." },
+    { id: "transport-motorbike", word: "Motorbike", meaning: "دراجة نارية", sentence: "He commutes on his motorbike." },
+    { id: "transport-taxi", word: "Taxi", meaning: "تاكسي", sentence: "We took a taxi to the airport." },
+    { id: "transport-subway", word: "Subway", meaning: "مترو", sentence: "The subway is very fast in the city." },
+    { id: "transport-tram", word: "Tram", meaning: "ترام", sentence: "The tram stops every 5 minutes." },
+    { id: "transport-boat", word: "Boat", meaning: "قارب", sentence: "We took a boat across the river." },
+    { id: "transport-ship", word: "Ship", meaning: "سفينة", sentence: "The ship sails to other countries." },
+    { id: "transport-road", word: "Road", meaning: "طريق", sentence: "The road is closed for construction." },
+    { id: "transport-bridge", word: "Bridge", meaning: "جسر", sentence: "We crossed the bridge to reach town." },
+    { id: "transport-highway", word: "Highway", meaning: "طريق سريع", sentence: "The highway is very busy today." },
+    { id: "transport-station", word: "Station", meaning: "محطة", sentence: "The train station is near the city center." },
+    { id: "transport-ticket", word: "Ticket", meaning: "تذكرة", sentence: "I bought a ticket for the bus." },
+    { id: "transport-driver", word: "Driver", meaning: "سائق", sentence: "The driver was very friendly." },
+    { id: "transport-passenger", word: "Passenger", meaning: "راكب", sentence: "The passenger waited at the platform." },
+    { id: "transport-route", word: "Route", meaning: "مسار", sentence: "This route is faster than the other." },
+    { id: "transport-traffic", word: "Traffic", meaning: "ازدحام", sentence: "There is heavy traffic in the city." }
+  ]
+},
+     {
+  title: "Leisure",
+  words: [
+    { id: "leisure-reading", word: "Reading", meaning: "القراءة", sentence: "I enjoy reading books in my free time." },
+    { id: "leisure-watching-tv", word: "Watching TV", meaning: "مشاهدة التلفاز", sentence: "She spends her leisure time watching TV." },
+    { id: "leisure-movies", word: "Movies", meaning: "أفلام", sentence: "We watch movies on weekends." },
+    { id: "leisure-music", word: "Music", meaning: "موسيقى", sentence: "Listening to music relaxes me." },
+    { id: "leisure-dancing", word: "Dancing", meaning: "رقص", sentence: "He likes dancing with friends." },
+    { id: "leisure-sports", word: "Sports", meaning: "رياضة", sentence: "Playing sports keeps me healthy." },
+    { id: "leisure-gaming", word: "Gaming", meaning: "ألعاب فيديو", sentence: "He spends his leisure time gaming." },
+    { id: "leisure-traveling", word: "Traveling", meaning: "السفر", sentence: "Traveling is my favorite hobby." },
+    { id: "leisure-photography", word: "Photography", meaning: "تصوير فوتوغرافي", sentence: "She enjoys photography on weekends." },
+    { id: "leisure-writing", word: "Writing", meaning: "الكتابة", sentence: "Writing in my journal relaxes me." },
+    { id: "leisure-cooking", word: "Cooking", meaning: "الطبخ", sentence: "Cooking is a fun hobby." },
+    { id: "leisure-painting", word: "Painting", meaning: "الرسم", sentence: "He likes painting landscapes." },
+    { id: "leisure-hiking", word: "Hiking", meaning: "المشي في الطبيعة", sentence: "We went hiking last weekend." },
+    { id: "leisure-swimming", word: "Swimming", meaning: "السباحة", sentence: "Swimming is a relaxing activity." },
+    { id: "leisure-cycling", word: "Cycling", meaning: "ركوب الدراجة", sentence: "I enjoy cycling in the park." },
+    { id: "leisure-gardening", word: "Gardening", meaning: "البستنة", sentence: "She spends time gardening every morning." },
+    { id: "leisure-yoga", word: "Yoga", meaning: "اليوغا", sentence: "Yoga helps me stay calm." },
+    { id: "leisure-meditation", word: "Meditation", meaning: "التأمل", sentence: "Meditation relaxes the mind." },
+    { id: "leisure-crafts", word: "Crafts", meaning: "الأشغال اليدوية", sentence: "I enjoy making crafts in my free time." },
+    { id: "leisure-shopping", word: "Shopping", meaning: "التسوق", sentence: "Shopping is my favorite leisure activity." }
+  ]
+},
+     {
+  title: "Friends",
+  words: [
+    { id: "friends-bestfriend", word: "Best Friend", meaning: "أفضل صديق", sentence: "My best friend always supports me." },
+    { id: "friends-classmate", word: "Classmate", meaning: "زميل دراسة", sentence: "I met my classmate at school today." },
+    { id: "friends-neighbor", word: "Neighbor", meaning: "جار", sentence: "My neighbor invited me for tea." },
+    { id: "friends-colleague", word: "Colleague", meaning: "زميل عمل", sentence: "She is a friendly colleague." },
+    { id: "friends-group", word: "Group", meaning: "مجموعة", sentence: "We are going out with our group of friends." },
+    { id: "friends-party", word: "Party", meaning: "حفلة", sentence: "I am attending a friend's party tonight." },
+    { id: "friends-chat", word: "Chat", meaning: "دردشة", sentence: "We chat online every evening." },
+    { id: "friends-call", word: "Call", meaning: "مكالمة", sentence: "I will call my friend later." },
+    { id: "friends-meeting", word: "Meeting", meaning: "لقاء", sentence: "We had a meeting at the café." },
+    { id: "friends-support", word: "Support", meaning: "دعم", sentence: "Friends give you emotional support." },
+    { id: "friends-laugh", word: "Laugh", meaning: "ضحك", sentence: "We always laugh together." },
+    { id: "friends-share", word: "Share", meaning: "مشاركة", sentence: "I like to share my secrets with my friends." },
+    { id: "friends-hobby", word: "Hobby", meaning: "هواية", sentence: "We share the same hobby." },
+    { id: "friends-travel", word: "Travel", meaning: "سفر", sentence: "We love to travel together." },
+    { id: "friends-dinner", word: "Dinner", meaning: "عشاء", sentence: "I had dinner with friends yesterday." },
+    { id: "friends-celebrate", word: "Celebrate", meaning: "احتفال", sentence: "We celebrate birthdays together." },
+    { id: "friends-message", word: "Message", meaning: "رسالة", sentence: "I sent a message to my friend." },
+    { id: "friends-invite", word: "Invite", meaning: "دعوة", sentence: "I invited my friends to my party." },
+    { id: "friends-visit", word: "Visit", meaning: "زيارة", sentence: "We visit our friends on weekends." },
+    { id: "friends-bond", word: "Bond", meaning: "رابط/صلة", sentence: "We have a strong bond of friendship." }
+  ]
+},
+     {
+  title: "Family",
+  words: [
+    { id: "family-father", word: "Father", meaning: "أب", sentence: "My father helps me with homework." },
+    { id: "family-mother", word: "Mother", meaning: "أم", sentence: "My mother cooks delicious meals." },
+    { id: "family-brother", word: "Brother", meaning: "أخ", sentence: "My brother plays football with me." },
+    { id: "family-sister", word: "Sister", meaning: "أخت", sentence: "My sister loves reading books." },
+    { id: "family-grandfather", word: "Grandfather", meaning: "جد", sentence: "My grandfather tells amazing stories." },
+    { id: "family-grandmother", word: "Grandmother", meaning: "جدّة", sentence: "My grandmother bakes cakes." },
+    { id: "family-uncle", word: "Uncle", meaning: "عم/خال", sentence: "My uncle visits us every month." },
+    { id: "family-aunt", word: "Aunt", meaning: "عمة/خالة", sentence: "My aunt is very kind." },
+    { id: "family-cousin", word: "Cousin", meaning: "ابن/ابنة العم أو الخال", sentence: "I play games with my cousins." },
+    { id: "family-husband", word: "Husband", meaning: "زوج", sentence: "Her husband is very supportive." },
+    { id: "family-wife", word: "Wife", meaning: "زوجة", sentence: "His wife is a teacher." },
+    { id: "family-son", word: "Son", meaning: "ابن", sentence: "Their son goes to school." },
+    { id: "family-daughter", word: "Daughter", meaning: "ابنة", sentence: "Their daughter loves painting." },
+    { id: "family-parent", word: "Parent", meaning: "والد/والدة", sentence: "Parents always care for their children." },
+    { id: "family-sibling", word: "Sibling", meaning: "أخ/أخت", sentence: "I have one sibling." },
+    { id: "family-familyhome", word: "Family Home", meaning: "بيت العائلة", sentence: "We gather at the family home every weekend." },
+    { id: "family-relatives", word: "Relatives", meaning: "أقارب", sentence: "We visit our relatives during holidays." },
+    { id: "family-marriage", word: "Marriage", meaning: "زواج", sentence: "Their marriage was a happy occasion." },
+    { id: "family-bond", word: "Bond", meaning: "رابط عائلي", sentence: "Family bonds are very strong." },
+    { id: "family-ancestor", word: "Ancestor", meaning: "سلف/جدود", sentence: "We honor our ancestors every year." }
+  ]
+},
+     {
+  title: "Neighborhood",
+  words: [
+    { id: "neighborhood-street", word: "Street", meaning: "شارع", sentence: "I live on a quiet street." },
+    { id: "neighborhood-avenue", word: "Avenue", meaning: "جادة", sentence: "The store is on the main avenue." },
+    { id: "neighborhood-park", word: "Park", meaning: "حديقة", sentence: "Children play in the park every afternoon." },
+    { id: "neighborhood-school", word: "School", meaning: "مدرسة", sentence: "The school is near my house." },
+    { id: "neighborhood-hospital", word: "Hospital", meaning: "مستشفى", sentence: "We went to the hospital for a checkup." },
+    { id: "neighborhood-shop", word: "Shop", meaning: "متجر", sentence: "There is a small shop around the corner." },
+    { id: "neighborhood-library", word: "Library", meaning: "مكتبة", sentence: "I borrow books from the library." },
+    { id: "neighborhood-church", word: "Church", meaning: "كنيسة", sentence: "The church is very old." },
+    { id: "neighborhood-mosque", word: "Mosque", meaning: "مسجد", sentence: "People pray at the mosque daily." },
+    { id: "neighborhood-restaurant", word: "Restaurant", meaning: "مطعم", sentence: "We ate at a new restaurant yesterday." },
+    { id: "neighborhood-cafe", word: "Cafe", meaning: "مقهى", sentence: "I met my friend at the cafe." },
+    { id: "neighborhood-police", word: "Police Station", meaning: "مركز شرطة", sentence: "The police station is near the park." },
+    { id: "neighborhood-firestation", word: "Fire Station", meaning: "مركز إطفاء", sentence: "The fire station is on the main street." },
+    { id: "neighborhood-bakery", word: "Bakery", meaning: "مخبز", sentence: "I bought fresh bread from the bakery." },
+    { id: "neighborhood-grocery", word: "Grocery", meaning: "بقالة", sentence: "The grocery store is open until 10 PM." },
+    { id: "neighborhood-pharmacy", word: "Pharmacy", meaning: "صيدلية", sentence: "I got my medicine from the pharmacy." },
+    { id: "neighborhood-parkbench", word: "Park Bench", meaning: "مقعد الحديقة", sentence: "We sat on the park bench and talked." },
+    { id: "neighborhood-trafficlight", word: "Traffic Light", meaning: "إشارة مرور", sentence: "The traffic light is red." },
+    { id: "neighborhood-crosswalk", word: "Crosswalk", meaning: "ممر مشاة", sentence: "Always use the crosswalk to cross the street." },
+    { id: "neighborhood-neighbor", word: "Neighbor", meaning: "جار", sentence: "My neighbor is very friendly." }
+  ]
+},
+     {
+  title: "Chores",
+  words: [
+    { id: "chores-cleaning", word: "Cleaning", meaning: "تنظيف", sentence: "I spend an hour cleaning the house every day." },
+    { id: "chores-dusting", word: "Dusting", meaning: "تنفيض الغبار", sentence: "She is dusting the shelves." },
+    { id: "chores-vacuuming", word: "Vacuuming", meaning: "كنس بالمكنسة الكهربائية", sentence: "I am vacuuming the living room." },
+    { id: "chores-mopping", word: "Mopping", meaning: "مسح الأرض", sentence: "He is mopping the kitchen floor." },
+    { id: "chores-washing", word: "Washing", meaning: "غسل", sentence: "I am washing the dishes." },
+    { id: "chores-dishes", word: "Dishes", meaning: "أطباق", sentence: "Please put the dishes in the sink." },
+    { id: "chores-laundry", word: "Laundry", meaning: "غسيل الملابس", sentence: "I need to do the laundry today." },
+    { id: "chores-iron", word: "Ironing", meaning: "كي الملابس", sentence: "She is ironing her clothes." },
+    { id: "chores-gardening", word: "Gardening", meaning: "البستنة", sentence: "He enjoys gardening in the afternoon." },
+    { id: "chores-cooking", word: "Cooking", meaning: "الطبخ", sentence: "I spend time cooking dinner for the family." },
+    { id: "chores-baking", word: "Baking", meaning: "خبز", sentence: "She is baking a cake." },
+    { id: "chores-shopping", word: "Shopping", meaning: "التسوق للمنزل", sentence: "I go shopping for groceries every week." },
+    { id: "chores-trash", word: "Taking out Trash", meaning: "إخراج القمامة", sentence: "I am taking out the trash." },
+    { id: "chores-recycling", word: "Recycling", meaning: "إعادة التدوير", sentence: "We separate recycling from trash." },
+    { id: "chores-organizing", word: "Organizing", meaning: "ترتيب", sentence: "I am organizing my closet." },
+    { id: "chores-wiping", word: "Wiping", meaning: "مسح", sentence: "She is wiping the kitchen counter." },
+    { id: "chores-cleanwindows", word: "Cleaning Windows", meaning: "تنظيف النوافذ", sentence: "I cleaned the windows yesterday." },
+    { id: "chores-polishing", word: "Polishing", meaning: "تلميع", sentence: "He is polishing the furniture." },
+    { id: "chores-repairing", word: "Repairing", meaning: "إصلاح", sentence: "I am repairing the broken chair." },
+    { id: "chores-maintenance", word: "Maintenance", meaning: "صيانة", sentence: "The house needs regular maintenance." }
+  ]
+}, 
+{
+  title: "Home Actions - Past",
+  words: [
+    { id: "home-clean-past", word: "Cleaned", meaning: "نظف", sentence: "I cleaned the living room yesterday." },
+    { id: "home-cook-past", word: "Cooked", meaning: "طبخ", sentence: "She cooked dinner for the family yesterday." },
+    { id: "home-wash-past", word: "Washed", meaning: "غسل", sentence: "I washed the dishes after lunch yesterday." },
+    { id: "home-dust-past", word: "Dusted", meaning: "نفض الغبار", sentence: "He dusted the shelves last week." },
+    { id: "home-sweep-past", word: "Swept", meaning: "كنس", sentence: "I swept the floor in the kitchen yesterday." },
+    { id: "home-mop-past", word: "Mopped", meaning: "مسح الأرض", sentence: "She mopped the bathroom floor yesterday." },
+    { id: "home-iron-past", word: "Ironed", meaning: "كى الملابس", sentence: "I ironed my shirts last evening." },
+    { id: "home-organize-past", word: "Organized", meaning: "رتب", sentence: "He organized the books on the shelf yesterday." },
+    { id: "home-polish-past", word: "Polished", meaning: "لمع", sentence: "I polished the wooden table yesterday." },
+    { id: "home-repair-past", word: "Repaired", meaning: "صلح", sentence: "She repaired the broken chair yesterday." },
+    { id: "home-decorate-past", word: "Decorated", meaning: "زين", sentence: "We decorated the living room for the party last weekend." },
+    { id: "home-water-past", word: "Watered", meaning: "سقى", sentence: "I watered the plants yesterday morning." },
+    { id: "home-vacuum-past", word: "Vacuumed", meaning: "نظف بالمكنسة الكهربائية", sentence: "He vacuumed the carpet in the bedroom yesterday." },
+    { id: "home-feed-past", word: "Fed", meaning: "طعّم", sentence: "I fed the pets yesterday." },
+    { id: "home-tidy-past", word: "Tidied", meaning: "رتب ونظم", sentence: "She tidied the living room before guests arrived yesterday." },
+    { id: "home-paint-past", word: "Painted", meaning: "دهن/صبغ", sentence: "We painted the walls last month." },
+    { id: "home-mend-past", word: "Mended", meaning: "صلح/خيط", sentence: "I mended torn clothes yesterday." },
+    { id: "home-sanitize-past", word: "Sanitized", meaning: "عقم", sentence: "I sanitized the kitchen surfaces yesterday." },
+    { id: "home-fold-past", word: "Folded", meaning: "طوى", sentence: "I folded the laundry after washing yesterday." },
+    { id: "home-store-past", word: "Stored", meaning: "خزن", sentence: "I stored the leftover food in the fridge yesterday." }
+  ]
+}, 
+{
+  title: "Home Actions - Present",
+  words: [
+    { id: "home-clean-present", word: "Clean", meaning: "ينظف", sentence: "I clean the living room every morning." },
+    { id: "home-cook-present", word: "Cook", meaning: "يطبخ", sentence: "She cooks dinner for the family every day." },
+    { id: "home-wash-present", word: "Wash", meaning: "يغسل", sentence: "I wash the dishes after lunch." },
+    { id: "home-dust-present", word: "Dust", meaning: "ينفض الغبار", sentence: "He dusts the shelves every week." },
+    { id: "home-sweep-present", word: "Sweep", meaning: "يكنس", sentence: "I sweep the floor in the kitchen every day." },
+    { id: "home-mop-present", word: "Mop", meaning: "يمسح الأرض", sentence: "She mops the bathroom floor regularly." },
+    { id: "home-iron-present", word: "Iron", meaning: "يكي الملابس", sentence: "I iron my shirts in the evening." },
+    { id: "home-organize-present", word: "Organize", meaning: "يرتب", sentence: "He organizes the books on the shelf every morning." },
+    { id: "home-polish-present", word: "Polish", meaning: "يلمع", sentence: "I polish the wooden table every weekend." },
+    { id: "home-repair-present", word: "Repair", meaning: "يصلح", sentence: "She repairs the broken chair." },
+    { id: "home-decorate-present", word: "Decorate", meaning: "يزين", sentence: "We decorate the living room for parties." },
+    { id: "home-water-present", word: "Water", meaning: "يسقي", sentence: "I water the plants every morning." },
+    { id: "home-vacuum-present", word: "Vacuum", meaning: "ينظف بالمكنسة الكهربائية", sentence: "He vacuums the carpet in the bedroom." },
+    { id: "home-feed-present", word: "Feed", meaning: "يطعّم", sentence: "I feed the pets every day." },
+    { id: "home-tidy-present", word: "Tidy", meaning: "يرتب وينظم", sentence: "She tidies the living room before guests arrive." },
+    { id: "home-paint-present", word: "Paint", meaning: "يدهن/يصبغ", sentence: "We paint the walls occasionally." },
+    { id: "home-mend-present", word: "Mend", meaning: "يصلح/يخيط", sentence: "I mend torn clothes when needed." },
+    { id: "home-sanitize-present", word: "Sanitize", meaning: "يعقم", sentence: "I sanitize the kitchen surfaces daily." },
+    { id: "home-fold-present", word: "Fold", meaning: "يطوي", sentence: "I fold the laundry after washing." },
+    { id: "home-store-present", word: "Store", meaning: "يخزن", sentence: "I store the leftover food in the fridge." }
+  ]
+}, 
+{
+  title: "Home Actions - Future",
+  words: [
+    { id: "home-clean-future", word: "Clean", meaning: "ينظف", sentence: "I will clean the living room tomorrow morning." },
+    { id: "home-cook-future", word: "Cook", meaning: "يطبخ", sentence: "She will cook dinner for the family tonight." },
+    { id: "home-wash-future", word: "Wash", meaning: "يغسل", sentence: "I will wash the dishes after lunch." },
+    { id: "home-dust-future", word: "Dust", meaning: "ينفض الغبار", sentence: "He will dust the shelves this afternoon." },
+    { id: "home-sweep-future", word: "Sweep", meaning: "يكنس", sentence: "I will sweep the floor in the kitchen later." },
+    { id: "home-mop-future", word: "Mop", meaning: "يمسح الأرض", sentence: "She will mop the bathroom floor tomorrow." },
+    { id: "home-iron-future", word: "Iron", meaning: "يكي الملابس", sentence: "I will iron my shirts tonight." },
+    { id: "home-organize-future", word: "Organize", meaning: "يرتب", sentence: "He will organize the books on the shelf tomorrow." },
+    { id: "home-polish-future", word: "Polish", meaning: "يلمع", sentence: "I will polish the wooden table this weekend." },
+    { id: "home-repair-future", word: "Repair", meaning: "يصلح", sentence: "She will repair the broken chair tomorrow." },
+    { id: "home-decorate-future", word: "Decorate", meaning: "يزين", sentence: "We will decorate the living room for the party next week." },
+    { id: "home-water-future", word: "Water", meaning: "يسقي", sentence: "I will water the plants tomorrow morning." },
+    { id: "home-vacuum-future", word: "Vacuum", meaning: "ينظف بالمكنسة الكهربائية", sentence: "He will vacuum the carpet in the bedroom later." },
+    { id: "home-feed-future", word: "Feed", meaning: "يطعّم", sentence: "I will feed the pets this evening." },
+    { id: "home-tidy-future", word: "Tidy", meaning: "يرتب وينظم", sentence: "She will tidy the living room before guests arrive." },
+    { id: "home-paint-future", word: "Paint", meaning: "يدهن/يصبغ", sentence: "We will paint the walls next weekend." },
+    { id: "home-mend-future", word: "Mend", meaning: "يصلح/يخيط", sentence: "I will mend torn clothes tomorrow." },
+    { id: "home-sanitize-future", word: "Sanitize", meaning: "يعقم", sentence: "I will sanitize the kitchen surfaces later today." },
+    { id: "home-fold-future", word: "Fold", meaning: "يطوي", sentence: "I will fold the laundry after washing tomorrow." },
+    { id: "home-store-future", word: "Store", meaning: "يخزن", sentence: "I will store the leftover food in the fridge later." }
+  ]
+}
+
+    ]
+  },
+  {
+  field: "Work",
+  sections: [
+    {
+      title: "Office",
+      words: [
+        { id: "office-arrive", word: "Arrive", meaning: "يصل", sentence: "I arrive at the office at 9 AM." },
+        { id: "office-leave", word: "Leave", meaning: "يغادر", sentence: "I leave the office at 6 PM." },
+        { id: "office-work", word: "Work", meaning: "يعمل", sentence: "I work on my tasks every day." },
+        { id: "office-answer", word: "Answer", meaning: "يجيب", sentence: "I answer phone calls in the office." },
+        { id: "office-meet", word: "Meet", meaning: "يلتقي", sentence: "I meet colleagues to discuss projects." },
+        { id: "office-organize", word: "Organize", meaning: "ينظم", sentence: "I organize files on my desk." },
+        { id: "office-file", word: "File", meaning: "يؤرشف", sentence: "I file important documents." },
+        { id: "office-print", word: "Print", meaning: "يطبع", sentence: "I print the report for the manager." },
+        { id: "office-email", word: "Email", meaning: "يرسل بريد إلكتروني", sentence: "I email updates to the team." },
+        { id: "office-call", word: "Call", meaning: "يتصل", sentence: "I call clients to follow up." },
+        { id: "office-check", word: "Check", meaning: "يتفقد", sentence: "I check my schedule every morning." },
+        { id: "office-schedule", word: "Schedule", meaning: "يرتب جدول", sentence: "I schedule meetings for the team." },
+        { id: "office-document", word: "Document", meaning: "يوثق", sentence: "I document the project progress." },
+        { id: "office-prepare", word: "Prepare", meaning: "يجهز", sentence: "I prepare reports for the manager." },
+        { id: "office-review", word: "Review", meaning: "يراجع", sentence: "I review documents before submitting." },
+        { id: "office-organize-meeting", word: "Organize Meeting", meaning: "ينظم اجتماع", sentence: "I organize meetings for the team." },
+        { id: "office-discuss", word: "Discuss", meaning: "يناقش", sentence: "I discuss project updates with my colleagues." },
+        { id: "office-assign", word: "Assign", meaning: "يوكل", sentence: "I assign tasks to team members." },
+        { id: "office-attend", word: "Attend", meaning: "يحضر", sentence: "I attend office training sessions." },
+        { id: "office-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up on pending tasks." }
+      ]
+    },
+    {
+      title: "Meetings",
+      words: [
+        { id: "meetings-schedule", word: "Schedule", meaning: "يرتب", sentence: "We schedule meetings weekly." },
+        { id: "meetings-attend", word: "Attend", meaning: "يحضر", sentence: "I attend the meeting on time." },
+        { id: "meetings-discuss", word: "Discuss", meaning: "يناقش", sentence: "We discuss project updates." },
+        { id: "meetings-present", word: "Present", meaning: "يعرض", sentence: "I present the report in the meeting." },
+        { id: "meetings-note", word: "Note", meaning: "يدون الملاحظات", sentence: "I note important points during the meeting." },
+        { id: "meetings-agree", word: "Agree", meaning: "يوافق", sentence: "We agree on the next steps." },
+        { id: "meetings-decide", word: "Decide", meaning: "يقرر", sentence: "We decide on project priorities." },
+        { id: "meetings-brainstorm", word: "Brainstorm", meaning: "يعصف ذهنياً", sentence: "We brainstorm ideas for the campaign." },
+        { id: "meetings-clarify", word: "Clarify", meaning: "يوضح", sentence: "I clarify doubts during meetings." },
+        { id: "meetings-summarize", word: "Summarize", meaning: "يلخص", sentence: "I summarize key points at the end." },
+        { id: "meetings-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up on meeting action items." },
+        { id: "meetings-suggest", word: "Suggest", meaning: "يقترح", sentence: "I suggest improvements during the meeting." },
+        { id: "meetings-explain", word: "Explain", meaning: "يشرح", sentence: "I explain tasks clearly to the team." },
+        { id: "meetings-question", word: "Question", meaning: "يسأل", sentence: "I question unclear points during the discussion." },
+        { id: "meetings-agenda", word: "Prepare Agenda", meaning: "يعد جدول الأعمال", sentence: "I prepare the meeting agenda." },
+        { id: "meetings-report", word: "Report", meaning: "يرفع تقرير", sentence: "I report progress during meetings." },
+        { id: "meetings-approve", word: "Approve", meaning: "يوافق", sentence: "The manager approves the meeting decisions." },
+        { id: "meetings-review", word: "Review", meaning: "يراجع", sentence: "We review past meeting notes." },
+        { id: "meetings-assign", word: "Assign", meaning: "يوكل", sentence: "We assign tasks during meetings." },
+        { id: "meetings-discuss-agenda", word: "Discuss Agenda", meaning: "يناقش جدول الأعمال", sentence: "We discuss the agenda in detail." }
+      ]
+    },
+    {
+      title: "Projects",
+      words: [
+        { id: "projects-plan", word: "Plan", meaning: "يخطط", sentence: "I plan the project steps carefully." },
+        { id: "projects-start", word: "Start", meaning: "يبدأ", sentence: "We start the project next week." },
+        { id: "projects-execute", word: "Execute", meaning: "ينفذ", sentence: "We execute the tasks efficiently." },
+        { id: "projects-monitor", word: "Monitor", meaning: "يراقب", sentence: "I monitor project progress daily." },
+        { id: "projects-manage", word: "Manage", meaning: "يدير", sentence: "She manages multiple projects at once." },
+        { id: "projects-assign", word: "Assign", meaning: "يوكل", sentence: "I assign tasks to team members." },
+        { id: "projects-review", word: "Review", meaning: "يراجع", sentence: "I review project deliverables." },
+        { id: "projects-update", word: "Update", meaning: "يحدث", sentence: "I update the project status regularly." },
+        { id: "projects-report", word: "Report", meaning: "يرفع تقرير", sentence: "I report the progress to the manager." },
+        { id: "projects-complete", word: "Complete", meaning: "يكمل", sentence: "We complete the project on time." },
+        { id: "projects-prepare", word: "Prepare", meaning: "يجهز", sentence: "I prepare documents for the project." },
+        { id: "projects-test", word: "Test", meaning: "يختبر", sentence: "We test the project deliverables." },
+        { id: "projects-collaborate", word: "Collaborate", meaning: "يتعاون", sentence: "We collaborate with other teams." },
+        { id: "projects-solve", word: "Solve", meaning: "يحل المشاكل", sentence: "We solve project issues quickly." },
+        { id: "projects-develop", word: "Develop", meaning: "يطور", sentence: "We develop the new software feature." },
+        { id: "projects-implement", word: "Implement", meaning: "ينفذ", sentence: "We implement the project plan." },
+        { id: "projects-communicate", word: "Communicate", meaning: "يتواصل", sentence: "We communicate updates to stakeholders." },
+        { id: "projects-track", word: "Track", meaning: "يتتبع", sentence: "I track project deadlines carefully." },
+        { id: "projects-evaluate", word: "Evaluate", meaning: "يقيم", sentence: "We evaluate project performance." },
+        { id: "projects-finalize", word: "Finalize", meaning: "يختتم/يُنهي", sentence: "We finalize the project documents." }
+      ]
+    },
+        {
+      title: "Emails",
+      words: [
+        { id: "emails-send", word: "Send", meaning: "يرسل", sentence: "I send emails to my colleagues every morning." },
+        { id: "emails-receive", word: "Receive", meaning: "يتلقى", sentence: "I receive emails from clients daily." },
+        { id: "emails-reply", word: "Reply", meaning: "يرد", sentence: "I reply to important emails immediately." },
+        { id: "emails-forward", word: "Forward", meaning: "يعيد توجيه", sentence: "I forward emails to my manager." },
+        { id: "emails-attach", word: "Attach", meaning: "يرفق", sentence: "I attach files to the email." },
+        { id: "emails-draft", word: "Draft", meaning: "يحرر مسودة", sentence: "I draft emails before sending them." },
+        { id: "emails-check", word: "Check", meaning: "يتفقد", sentence: "I check my inbox every hour." },
+        { id: "emails-delete", word: "Delete", meaning: "يحذف", sentence: "I delete unnecessary emails daily." },
+        { id: "emails-organize", word: "Organize", meaning: "يرتب", sentence: "I organize my emails into folders." },
+        { id: "emails-flag", word: "Flag", meaning: "يعلّم", sentence: "I flag important emails for follow-up." },
+        { id: "emails-mark", word: "Mark", meaning: "يضع علامة", sentence: "I mark emails as read after reviewing." },
+        { id: "emails-search", word: "Search", meaning: "يبحث", sentence: "I search emails for specific information." },
+        { id: "emails-forward-to-team", word: "Forward to Team", meaning: "يعيد توجيه للفريق", sentence: "I forward emails to the team for action." },
+        { id: "emails-save", word: "Save", meaning: "يحفظ", sentence: "I save important emails for reference." },
+        { id: "emails-print", word: "Print", meaning: "يطبع", sentence: "I print emails for the meeting." },
+        { id: "emails-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up on emails that need action." },
+        { id: "emails-scan", word: "Scan", meaning: "يفحص", sentence: "I scan emails for urgent matters." },
+        { id: "emails-forward-manager", word: "Forward to Manager", meaning: "يعيد توجيه للمدير", sentence: "I forward important emails to my manager." },
+        { id: "emails-archive", word: "Archive", meaning: "يؤرشف", sentence: "I archive emails after processing them." },
+        { id: "emails-print-copy", word: "Print Copy", meaning: "يطبع نسخة", sentence: "I print a copy of the email for record." }
+      ]
+    },
+    {
+      title: "Deadlines",
+      words: [
+        { id: "deadlines-set", word: "Set", meaning: "يحدد", sentence: "I set project deadlines at the start." },
+        { id: "deadlines-meet", word: "Meet", meaning: "يلتزم", sentence: "I meet deadlines for every task." },
+        { id: "deadlines-miss", word: "Miss", meaning: "يفوت", sentence: "I try not to miss any deadlines." },
+        { id: "deadlines-extend", word: "Extend", meaning: "يمدد", sentence: "We extend deadlines if necessary." },
+        { id: "deadlines-check", word: "Check", meaning: "يتفقد", sentence: "I check deadlines every morning." },
+        { id: "deadlines-plan", word: "Plan", meaning: "يخطط", sentence: "I plan my tasks according to deadlines." },
+        { id: "deadlines-prioritize", word: "Prioritize", meaning: "يعطي أولوية", sentence: "I prioritize tasks based on deadlines." },
+        { id: "deadlines-track", word: "Track", meaning: "يتتبع", sentence: "I track approaching deadlines carefully." },
+        { id: "deadlines-manage", word: "Manage", meaning: "يدير", sentence: "I manage multiple deadlines daily." },
+        { id: "deadlines-adjust", word: "Adjust", meaning: "يضبط", sentence: "I adjust tasks to meet deadlines." },
+        { id: "deadlines-plan-ahead", word: "Plan Ahead", meaning: "يخطط مسبقًا", sentence: "I plan ahead to avoid missed deadlines." },
+        { id: "deadlines-confirm", word: "Confirm", meaning: "يؤكد", sentence: "I confirm deadlines with my manager." },
+        { id: "deadlines-update", word: "Update", meaning: "يحدث", sentence: "I update my deadline list regularly." },
+        { id: "deadlines-monitor", word: "Monitor", meaning: "يراقب", sentence: "I monitor deadlines every week." },
+        { id: "deadlines-prepare", word: "Prepare", meaning: "يجهز", sentence: "I prepare tasks before deadlines." },
+        { id: "deadlines-discuss", word: "Discuss", meaning: "يناقش", sentence: "I discuss deadlines with my team." },
+        { id: "deadlines-review", word: "Review", meaning: "يراجع", sentence: "I review deadlines at the end of each week." },
+        { id: "deadlines-alert", word: "Alert", meaning: "ينبه", sentence: "I alert team members about approaching deadlines." },
+        { id: "deadlines-adjust-priorities", word: "Adjust Priorities", meaning: "يضبط الأولويات", sentence: "I adjust priorities to meet deadlines." },
+        { id: "deadlines-complete", word: "Complete", meaning: "يكمل", sentence: "I complete tasks before deadlines." }
+      ]
+    },
+    {
+      title: "Clients",
+      words: [
+        { id: "clients-contact", word: "Contact", meaning: "يتواصل", sentence: "I contact clients regularly." },
+        { id: "clients-meet", word: "Meet", meaning: "يلتقي", sentence: "I meet clients for project discussions." },
+        { id: "clients-update", word: "Update", meaning: "يحدث", sentence: "I update clients about project progress." },
+        { id: "clients-negotiate", word: "Negotiate", meaning: "يتفاوض", sentence: "I negotiate deadlines with clients." },
+        { id: "clients-serve", word: "Serve", meaning: "يخدم", sentence: "We serve clients professionally." },
+        { id: "clients-assist", word: "Assist", meaning: "يساعد", sentence: "I assist clients with inquiries." },
+        { id: "clients-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up with clients regularly." },
+        { id: "clients-meet-deadlines", word: "Meet Deadlines", meaning: "يلتزم بالمواعيد", sentence: "We meet deadlines for clients' projects." },
+        { id: "clients-communicate", word: "Communicate", meaning: "يتواصل", sentence: "I communicate updates to clients." },
+        { id: "clients-resolve", word: "Resolve", meaning: "يحل المشاكل", sentence: "I resolve client complaints quickly." },
+        { id: "clients-manage", word: "Manage", meaning: "يدير", sentence: "I manage client accounts efficiently." },
+        { id: "clients-maintain", word: "Maintain", meaning: "يحافظ على", sentence: "I maintain good relationships with clients." },
+        { id: "clients-record", word: "Record", meaning: "يوثق", sentence: "I record client interactions." },
+        { id: "clients-check", word: "Check", meaning: "يتفقد", sentence: "I check client requirements before starting work." },
+        { id: "clients-prepare", word: "Prepare", meaning: "يجهز", sentence: "I prepare proposals for clients." },
+        { id: "clients-present", word: "Present", meaning: "يعرض", sentence: "I present solutions to clients." },
+        { id: "clients-respond", word: "Respond", meaning: "يرد", sentence: "I respond to client emails quickly." },
+        { id: "clients-discuss", word: "Discuss", meaning: "يناقش", sentence: "I discuss project details with clients." },
+        { id: "clients-assign", word: "Assign", meaning: "يوكل", sentence: "I assign client requests to the team." },
+        { id: "clients-approve", word: "Approve", meaning: "يوافق", sentence: "Clients approve final project deliverables." }
+      ]
+    },
+    {
+      title: "Manager",
+      words: [
+        { id: "manager-assign", word: "Assign", meaning: "يوكل", sentence: "The manager assigns tasks to the team." },
+        { id: "manager-supervise", word: "Supervise", meaning: "يشرف", sentence: "The manager supervises all ongoing projects." },
+        { id: "manager-evaluate", word: "Evaluate", meaning: "يقيم", sentence: "The manager evaluates team performance." },
+        { id: "manager-guide", word: "Guide", meaning: "يرشد", sentence: "The manager guides new employees." },
+        { id: "manager-review", word: "Review", meaning: "يراجع", sentence: "The manager reviews the reports." },
+        { id: "manager-approve", word: "Approve", meaning: "يوافق", sentence: "The manager approves project budgets." },
+        { id: "manager-discuss", word: "Discuss", meaning: "يناقش", sentence: "The manager discusses tasks with the team." },
+        { id: "manager-mentor", word: "Mentor", meaning: "يوجه", sentence: "The manager mentors junior staff." },
+        { id: "manager-communicate", word: "Communicate", meaning: "يتواصل", sentence: "The manager communicates updates clearly." },
+        { id: "manager-motivate", word: "Motivate", meaning: "يحفيز", sentence: "The manager motivates the team to achieve goals." },
+        { id: "manager-set-goals", word: "Set Goals", meaning: "يحدد أهداف", sentence: "The manager sets goals for the team." },
+        { id: "manager-monitor", word: "Monitor", meaning: "يراقب", sentence: "The manager monitors team progress daily." },
+        { id: "manager-plan", word: "Plan", meaning: "يخطط", sentence: "The manager plans team projects carefully." },
+        { id: "manager-resolve", word: "Resolve", meaning: "يحل المشاكل", sentence: "The manager resolves conflicts between team members." },
+        { id: "manager-assign-priority", word: "Assign Priority", meaning: "يعطي أولوية", sentence: "The manager assigns priority tasks first." },
+        { id: "manager-track", word: "Track", meaning: "يتتبع", sentence: "The manager tracks project deadlines." },
+        { id: "manager-approve-report", word: "Approve Report", meaning: "يوافق على التقرير", sentence: "The manager approves monthly reports." },
+        { id: "manager-discuss-strategy", word: "Discuss Strategy", meaning: "يناقش الاستراتيجية", sentence: "The manager discusses strategy with the team." },
+        { id: "manager-evaluate-performance", word: "Evaluate Performance", meaning: "يقيم الأداء", sentence: "The manager evaluates performance quarterly." },
+        { id: "manager-feedback", word: "Give Feedback", meaning: "يعطي ملاحظات", sentence: "The manager gives feedback to employees." }
+      ]
+    },
+    {
+      title: "Teamwork",
+      words: [
+        { id: "teamwork-collaborate", word: "Collaborate", meaning: "يتعاون", sentence: "We collaborate effectively on projects." },
+        { id: "teamwork-communicate", word: "Communicate", meaning: "يتواصل", sentence: "We communicate regularly with the team." },
+        { id: "teamwork-support", word: "Support", meaning: "يدعم", sentence: "We support each other at work." },
+        { id: "teamwork-assign", word: "Assign", meaning: "يوكل", sentence: "We assign tasks fairly among team members." },
+        { id: "teamwork-share", word: "Share", meaning: "يشارك", sentence: "We share ideas during meetings." },
+        { id: "teamwork-discuss", word: "Discuss", meaning: "يناقش", sentence: "We discuss problems together." },
+        { id: "teamwork-plan", word: "Plan", meaning: "يخطط", sentence: "We plan projects together as a team." },
+        { id: "teamwork-review", word: "Review", meaning: "يراجع", sentence: "We review progress weekly." },
+        { id: "teamwork-encourage", word: "Encourage", meaning: "يشجع", sentence: "We encourage each other to improve." },
+        { id: "teamwork-provide", word: "Provide", meaning: "يوفر", sentence: "We provide support when needed." },
+        { id: "teamwork-train", word: "Train", meaning: "يدرب", sentence: "We train new team members." },
+        { id: "teamwork-motivate", word: "Motivate", meaning: "يحفيز", sentence: "We motivate each other to achieve goals." },
+        { id: "teamwork-feedback", word: "Give Feedback", meaning: "يعطي ملاحظات", sentence: "We give feedback to improve work." },
+        { id: "teamwork-solve", word: "Solve", meaning: "يحل", sentence: "We solve problems together." },
+        { id: "teamwork-coordinate", word: "Coordinate", meaning: "ينسق", sentence: "We coordinate tasks efficiently." },
+        { id: "teamwork-share-resources", word: "Share Resources", meaning: "يشارك الموارد", sentence: "We share resources for better results." },
+        { id: "teamwork-plan-tasks", word: "Plan Tasks", meaning: "يخطط المهام", sentence: "We plan tasks collaboratively." },
+        { id: "teamwork-set-goals", word: "Set Goals", meaning: "يحدد أهداف", sentence: "We set team goals each month." },
+        { id: "teamwork-achieve", word: "Achieve", meaning: "يحقق", sentence: "We achieve targets together." },
+        { id: "teamwork-monitor", word: "Monitor", meaning: "يراقب", sentence: "We monitor progress as a team." }
+      ]
+    },
+    {
+      title: "Promotion",
+      words: [
+        { id: "promotion-apply", word: "Apply", meaning: "يتقدم", sentence: "I apply for promotion when eligible." },
+        { id: "promotion-request", word: "Request", meaning: "يطلب", sentence: "I request promotion from my manager." },
+        { id: "promotion-review", word: "Review", meaning: "يراجع", sentence: "The manager reviews promotion requests." },
+        { id: "promotion-evaluate", word: "Evaluate", meaning: "يقيم", sentence: "The manager evaluates performance for promotion." },
+        { id: "promotion-approve", word: "Approve", meaning: "يوافق", sentence: "The manager approves the promotion." },
+        { id: "promotion-discuss", word: "Discuss", meaning: "يناقش", sentence: "I discuss promotion opportunities with HR." },
+        { id: "promotion-prepare", word: "Prepare", meaning: "يجهز", sentence: "I prepare documents for promotion." },
+        { id: "promotion-communicate", word: "Communicate", meaning: "يتواصل", sentence: "The manager communicates promotion results." },
+        { id: "promotion-feedback", word: "Give Feedback", meaning: "يعطي ملاحظات", sentence: "I receive feedback for promotion." },
+        { id: "promotion-achieve", word: "Achieve", meaning: "يحقق", sentence: "I achieve promotion goals." },
+        { id: "promotion-target", word: "Target", meaning: "يستهدف", sentence: "I target a higher position for promotion." },
+        { id: "promotion-plan", word: "Plan", meaning: "يخطط", sentence: "I plan steps to get promoted." },
+        { id: "promotion-monitor", word: "Monitor", meaning: "يراقب", sentence: "I monitor my performance for promotion." },
+        { id: "promotion-discuss-feedback", word: "Discuss Feedback", meaning: "يناقش الملاحظات", sentence: "I discuss feedback to improve promotion chances." },
+        { id: "promotion-assess", word: "Assess", meaning: "يقيم", sentence: "I assess my skills for promotion." },
+        { id: "promotion-develop", word: "Develop", meaning: "يطور", sentence: "I develop skills to get promoted." },
+        { id: "promotion-achievements", word: "Highlight Achievements", meaning: "يبرز الإنجازات", sentence: "I highlight achievements for promotion review." },
+        { id: "promotion-communicate-plan", word: "Communicate Plan", meaning: "يشرح خطة", sentence: "I communicate promotion plan to manager." },
+        { id: "promotion-prepare-meeting", word: "Prepare Meeting", meaning: "يجهز اجتماع", sentence: "I prepare a meeting to discuss promotion." },
+        { id: "promotion-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up on promotion process." }
+      ]
+    },
+    {
+      title: "Networking",
+      words: [
+        { id: "networking-connect", word: "Connect", meaning: "يتواصل", sentence: "I connect with professionals in my field." },
+        { id: "networking-attend", word: "Attend", meaning: "يحضر", sentence: "I attend networking events regularly." },
+        { id: "networking-meet", word: "Meet", meaning: "يلتقي", sentence: "I meet new people at conferences." },
+        { id: "networking-follow-up", word: "Follow Up", meaning: "يتابع", sentence: "I follow up with contacts after events." },
+        { id: "networking-introduce", word: "Introduce", meaning: "يقدم", sentence: "I introduce myself to new contacts." },
+        { id: "networking-share", word: "Share", meaning: "يشارك", sentence: "I share my work experience with others." },
+        { id: "networking-collaborate", word: "Collaborate", meaning: "يتعاون", sentence: "I collaborate with professionals for projects." },
+        { id: "networking-discuss", word: "Discuss", meaning: "يناقش", sentence: "I discuss industry trends with contacts." },
+        { id: "networking-exchange", word: "Exchange", meaning: "يتبادل", sentence: "I exchange ideas with colleagues." },
+        { id: "networking-learn", word: "Learn", meaning: "يتعلم", sentence: "I learn from experienced professionals." },
+        { id: "networking-invite", word: "Invite", meaning: "يدعو", sentence: "I invite contacts to industry events." },
+        { id: "networking-participate", word: "Participate", meaning: "يشارك", sentence: "I participate in professional workshops." },
+        { id: "networking-build-relationship", word: "Build Relationships", meaning: "يبني علاقات", sentence: "I build relationships with industry peers." },
+        { id: "networking-explore", word: "Explore", meaning: "يستكشف", sentence: "I explore new networking opportunities." },
+        { id: "networking-connect-online", word: "Connect Online", meaning: "يتواصل عبر الإنترنت", sentence: "I connect with professionals online." },
+        { id: "networking-maintain", word: "Maintain", meaning: "يحافظ على", sentence: "I maintain relationships with contacts." },
+        { id: "networking-follow", word: "Follow", meaning: "يتابع", sentence: "I follow industry leaders for updates." },
+        { id: "networking-share-experience", word: "Share Experience", meaning: "يشارك الخبرة", sentence: "I share my experience with others." },
+        { id: "networking-introduce-team", word: "Introduce Team", meaning: "يعرف الفريق", sentence: "I introduce my team to new contacts." },
+        { id: "networking-communicate", word: "Communicate", meaning: "يتواصل", sentence: "I communicate with contacts regularly." }
+      ]
+    }, 
+{
+  title: "Work Actions - Past",
+  words: [
+    { id: "work-past-attended", word: "Attended", meaning: "حضر", sentence: "Attended a meeting yesterday." },
+    { id: "work-past-sent", word: "Sent", meaning: "أرسل", sentence: "Sent the emails last night." },
+    { id: "work-past-received", word: "Received", meaning: "تلقى", sentence: "Received the client request yesterday." },
+    { id: "work-past-completed", word: "Completed", meaning: "أكمل", sentence: "Completed the project on time." },
+    { id: "work-past-reviewed", word: "Reviewed", meaning: "راجع", sentence: "Reviewed the report last evening." },
+    { id: "work-past-organized", word: "Organized", meaning: "نظم", sentence: "Organized the files yesterday." },
+    { id: "work-past-discussed", word: "Discussed", meaning: "ناقش", sentence: "Discussed the new plan yesterday." },
+    { id: "work-past-prepared", word: "Prepared", meaning: "جهز", sentence: "Prepared the presentation last week." },
+    { id: "work-past-scheduled", word: "Scheduled", meaning: "حدد موعد", sentence: "Scheduled the meeting yesterday." },
+    { id: "work-past-attached", word: "Attached", meaning: "أرفق", sentence: "Attached the documents to the email." },
+    { id: "work-past-followed", word: "Followed Up", meaning: "تابع", sentence: "Followed up on the client request." },
+    { id: "work-past-delegated", word: "Delegated", meaning: "فوّض", sentence: "Delegated tasks to the team." },
+    { id: "work-past-analyzed", word: "Analyzed", meaning: "حلل", sentence: "Analyzed the report yesterday." },
+    { id: "work-past-monitored", word: "Monitored", meaning: "راقب", sentence: "Monitored the project's progress." },
+    { id: "work-past-collaborated", word: "Collaborated", meaning: "تعاون", sentence: "Collaborated with the marketing team." },
+    { id: "work-past-attended-training", word: "Attended Training", meaning: "حضر تدريب", sentence: "Attended a training session last week." },
+    { id: "work-past-updated", word: "Updated", meaning: "حدث", sentence: "Updated the client report yesterday." },
+    { id: "work-past-submitted", word: "Submitted", meaning: "قدّم", sentence: "Submitted the assignment on time." },
+    { id: "work-past-responded", word: "Responded", meaning: "رد", sentence: "Responded to emails yesterday." },
+    { id: "work-past-evaluated", word: "Evaluated", meaning: "قيّم", sentence: "Evaluated team performance last month." }
+  ]
+},
+{
+  title: "Work Actions - Present",
+  words: [
+    { id: "work-present-attend", word: "Attend", meaning: "يحضر", sentence: "Attend meetings every day." },
+    { id: "work-present-send", word: "Send", meaning: "يرسل", sentence: "Send emails to clients regularly." },
+    { id: "work-present-receive", word: "Receive", meaning: "يتلقى", sentence: "Receive requests daily." },
+    { id: "work-present-complete", word: "Complete", meaning: "يكمل", sentence: "Complete tasks on time." },
+    { id: "work-present-review", word: "Review", meaning: "يراجع", sentence: "Review reports every morning." },
+    { id: "work-present-organize", word: "Organize", meaning: "ينظم", sentence: "Organize the desk daily." },
+    { id: "work-present-discuss", word: "Discuss", meaning: "يناقش", sentence: "Discuss projects regularly." },
+    { id: "work-present-prepare", word: "Prepare", meaning: "يجهز", sentence: "Prepare presentations for meetings." },
+    { id: "work-present-schedule", word: "Schedule", meaning: "يحدد موعد", sentence: "Schedule tasks for the week." },
+    { id: "work-present-attach", word: "Attach", meaning: "يرفق", sentence: "Attach files to emails daily." },
+    { id: "work-present-follow", word: "Follow Up", meaning: "يتابع", sentence: "Follow up with clients regularly." },
+    { id: "work-present-delegate", word: "Delegate", meaning: "فوّض", sentence: "Delegate tasks to the team." },
+    { id: "work-present-analyze", word: "Analyze", meaning: "يحلل", sentence: "Analyze reports every morning." },
+    { id: "work-present-monitor", word: "Monitor", meaning: "يراقب", sentence: "Monitor project progress daily." },
+    { id: "work-present-collaborate", word: "Collaborate", meaning: "يتعاون", sentence: "Collaborate with the team." },
+    { id: "work-present-attend-training", word: "Attend Training", meaning: "يحضر تدريب", sentence: "Attend training sessions regularly." },
+    { id: "work-present-update", word: "Update", meaning: "يحدث", sentence: "Update reports every day." },
+    { id: "work-present-submit", word: "Submit", meaning: "يقدّم", sentence: "Submit assignments on time." },
+    { id: "work-present-respond", word: "Respond", meaning: "يرد", sentence: "Respond to emails quickly." },
+    { id: "work-present-evaluate", word: "Evaluate", meaning: "يقيم", sentence: "Evaluate team performance regularly." }
+ ]
+},
+{
+  title: "Work Actions - Future",
+  words: [
+    { id: "work-future-attend", word: "Attend", meaning: "يحضر", sentence: "Attend the meeting tomorrow." },
+    { id: "work-future-send", word: "Send", meaning: "يرسل", sentence: "Send the emails later." },
+    { id: "work-future-receive", word: "Receive", meaning: "يتلقى", sentence: "Receive the documents next week." },
+    { id: "work-future-complete", word: "Complete", meaning: "يكمل", sentence: "Complete the project on time." },
+    { id: "work-future-review", word: "Review", meaning: "يراجع", sentence: "Review the report tomorrow." },
+    { id: "work-future-organize", word: "Organize", meaning: "ينظم", sentence: "Organize the files next week." },
+    { id: "work-future-discuss", word: "Discuss", meaning: "يناقش", sentence: "Discuss the new plan tomorrow." },
+    { id: "work-future-prepare", word: "Prepare", meaning: "يجهز", sentence: "Prepare the presentation next week." },
+    { id: "work-future-schedule", word: "Schedule", meaning: "يحدد موعد", sentence: "Schedule the meeting tomorrow." },
+    { id: "work-future-attach", word: "Attach", meaning: "يرفق", sentence: "Attach the documents to the email." },
+    { id: "work-future-follow", word: "Follow Up", meaning: "يتابع", sentence: "Follow up on the client request." },
+    { id: "work-future-delegate", word: "Delegate", meaning: "فوّض", sentence: "Delegate tasks to the team." },
+    { id: "work-future-analyze", word: "Analyze", meaning: "يحلل", sentence: "Analyze the report next week." },
+    { id: "work-future-monitor", word: "Monitor", meaning: "يراقب", sentence: "Monitor project progress tomorrow." },
+    { id: "work-future-collaborate", word: "Collaborate", meaning: "يتعاون", sentence: "Collaborate with the team on the new project." },
+    { id: "work-future-attend-training", word: "Attend Training", meaning: "يحضر تدريب", sentence: "Attend the training session next week." },
+    { id: "work-future-update", word: "Update", meaning: "يحدث", sentence: "Update reports tomorrow." },
+    { id: "work-future-submit", word: "Submit", meaning: "يقدّم", sentence: "Submit the assignment on Friday." },
+    { id: "work-future-respond", word: "Respond", meaning: "يرد", sentence: "Respond to emails later today." },
+    { id: "work-future-evaluate", word: "Evaluate", meaning: "يقيم", sentence: "Evaluate team performance next month." }
+ ]
+}
+]
+}, {
+    field: "Travel",
+    sections: [
+      { title: "Airport", words: [] },
+      { title: "Hotel", words: [] },
+      { title: "Tourist Sites", words: [] },
+      { title: "Transport", words: [] },
+      { title: "Food", words: [] },
+      { title: "Booking", words: [] },
+      { title: "Local Language", words: [] },
+      { title: "Souvenirs", words: [] },
+      { title: "Travel Tips", words: [] },
+      { title: "Emergency", words: [] }
+    ]
+  },
+  {
+    field: "Education",
+    sections: [
+      { title: "School", words: [] },
+      { title: "University", words: [] },
+      { title: "Homework", words: [] },
+      { title: "Lectures", words: [] },
+      { title: "Exams", words: [] },
+      { title: "Library", words: [] },
+      { title: "Study Group", words: [] },
+      { title: "Projects", words: [] },
+      { title: "Research", words: [] },
+      { title: "Graduation", words: [] }
+    ]
+  },
+  {
+    field: "Health",
+    sections: [
+      { title: "Doctor", words: [] },
+      { title: "Medicine", words: [] },
+      { title: "Hospital", words: [] },
+      { title: "Fitness", words: [] },
+      { title: "Nutrition", words: [] },
+      { title: "Mental Health", words: [] },
+      { title: "Symptoms", words: [] },
+      { title: "Checkup", words: [] },
+      { title: "Emergency", words: [] },
+      { title: "Wellness", words: [] }
+    ]
+  },
+  {
+    field: "Finance",
+    sections: [
+      { title: "Banking", words: [] },
+      { title: "Investment", words: [] },
+      { title: "Budgeting", words: [] },
+      { title: "Taxes", words: [] },
+      { title: "Shopping", words: [] },
+      { title: "Salary", words: [] },
+      { title: "Loans", words: [] },
+      { title: "Insurance", words: [] },
+      { title: "Savings", words: [] },
+      { title: "Expenses", words: [] }
+    ]
+  },
+  {
+    field: "Technology",
+    sections: [
+      { title: "Computers", words: [] },
+      { title: "Internet", words: [] },
+      { title: "Mobile", words: [] },
+      { title: "Software", words: [] },
+      { title: "Hardware", words: [] },
+      { title: "Programming", words: [] },
+      { title: "Gaming", words: [] },
+      { title: "AI", words: [] },
+      { title: "Security", words: [] },
+      { title: "Gadgets", words: [] }
+    ]
+  },
+  {
+    field: "Entertainment",
+    sections: [
+      { title: "Movies", words: [] },
+      { title: "Music", words: [] },
+      { title: "Theater", words: [] },
+      { title: "TV Shows", words: [] },
+      { title: "Books", words: [] },
+      { title: "Games", words: [] },
+      { title: "Hobbies", words: [] },
+      { title: "Events", words: [] },
+      { title: "Streaming", words: [] },
+      { title: "Celebrities", words: [] }
+    ]
+  },
+  {
+    field: "Culture",
+    sections: [
+      { title: "Traditions", words: [] },
+      { title: "Languages", words: [] },
+      { title: "History", words: [] },
+      { title: "Art", words: [] },
+      { title: "Cuisine", words: [] },
+      { title: "Festivals", words: [] },
+      { title: "Religion", words: [] },
+      { title: "Customs", words: [] },
+      { title: "Fashion", words: [] },
+      { title: "Architecture", words: [] }
+    ]
+  },
+  {
+    field: "Sports",
+    sections: [
+      { title: "Football", words: [] },
+      { title: "Basketball", words: [] },
+      { title: "Tennis", words: [] },
+      { title: "Swimming", words: [] },
+      { title: "Gym", words: [] },
+      { title: "Yoga", words: [] },
+      { title: "Running", words: [] },
+      { title: "Cycling", words: [] },
+      { title: "Competitions", words: [] },
+      { title: "Outdoor Activities", words: [] }
+    ]
+  }
+];
+
+
+let activeField = null;
+let activeSection = null;
+
+const fieldsContainer = document.getElementById("fieldsContainer");
+const sectionsContainer = document.getElementById("sectionsContainer");
+const wordsContainer = document.getElementById("wordsContainer");
+
+
+// =================== STORAGE ===================
+function isRead(id) {
+  return localStorage.getItem(id) === "true";
+}
+
+function toggleRead(id, checked) {
+  localStorage.setItem(id, checked);
+}
+
+function resetProgress() {
+  localStorage.clear();
+  if (activeField !== null && activeSection !== null) {
+    renderWords(activeField, activeSection);
+  }
+}
+
+
+// =================== RENDER ===================
+
+// المجالات
+data.forEach((item, index) => {
+  fieldsContainer.innerHTML += `
+    <div onclick="selectField(${index})"
+      class="bg-white p-4 rounded-2xl shadow text-center font-semibold cursor-pointer
+      hover:bg-blue-500 hover:text-white transition">
+      ${item.field}
+    </div>
+  `;
+});
+
+
+// اختيار مجال
+window.selectField = function(index) {
+  activeField = index;
+  activeSection = null;
+  sectionsContainer.innerHTML = "";
+  wordsContainer.innerHTML = "";
+  sectionsContainer.classList.remove("hidden");
+
+  data[index].sections.forEach((section, i) => {
+    sectionsContainer.innerHTML += `
+      <button onclick="selectSection(${i})"
+        class="px-4 py-2 rounded-full bg-gray-200 text-sm font-medium
+        hover:bg-blue-500 hover:text-white transition">
+        ${section.title}
+      </button>
+    `;
+  });
+};
+
+
+// اختيار قسم
+window.selectSection = function(index) {
+  activeSection = index;
+  renderWords(activeField, index);
+};
+
+
+// عرض الكلمات
+function renderWords(fieldIndex, sectionIndex) {
+  wordsContainer.innerHTML = "";
+  const words = data[fieldIndex].sections[sectionIndex].words;
+
+  words.forEach(item => {
+    const checked = isRead(item.id);
+    const highlightedSentence = item.sentence.replace(
+      new RegExp(item.word, "gi"),
+      `<span class="bg-yellow-300 px-1 rounded">${item.word}</span>`
+    );
+
+    wordsContainer.innerHTML += `
+      <div class="bg-white rounded-2xl shadow p-4 mb-3 flex gap-3 items-start">
+        
+        <input type="checkbox"
+          ${checked ? "checked" : ""}
+          onchange="toggleRead('${item.id}', this.checked)"
+          class="mt-1 w-5 h-5 accent-blue-600">
+
+        <div class="${checked ? 'opacity-50 line-through' : ''}">
+          <p class="text-lg font-bold">${item.word}</p>
+          <p class="text-sm text-green-600 mb-1">${item.meaning}</p>
+          <p class="text-sm">${highlightedSentence}</p>
+        </div>
+      </div>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>
